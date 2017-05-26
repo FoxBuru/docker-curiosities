@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+        db:
+                image: mariadb:latest
+                volumes:
+                        - db_data:/var/lib/mysql
+                restart: always
+                environment:
+                        MYSQL_ROOT_PASSWORD: mypasswd
+                        MYSQL_DATABASE: citest
+                        MYSQL_USER: citest
+                        MYSQL_PASSWORD: citest
+
+        citest:
+                build: .
+                command: php -S 0.0.0.0:8000 -t /app -c /app/php.ini
+                links:
+                        - db
+                volumes: 
+                        - .:/app
+                ports:
+                        - "8000:8000"
+volumes:
+        db_data:
