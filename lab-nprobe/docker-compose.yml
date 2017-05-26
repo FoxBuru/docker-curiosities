@@ -1,0 +1,28 @@
+version: '3'
+services:
+        prober:
+                image: "rungeict/nprobe"
+                ports:
+                        - "0.0.0.0:2055:2055/udp"
+                expose:
+                        - 3234
+                entrypoint:
+                        - nprobe
+                        - -i
+                        - none
+                        - -n
+                        - none
+                        - --collector-port
+                        - '2055'
+                        - --zmq
+                        - tcp://0.0.0.0:3234
+        topviewer:
+                image: "lucaderi/ntopng-docker"
+                ports: 
+                        - "31030:3000"
+                links:
+                        - prober:nprobe
+                entrypoint:
+                        - /tmp/run.sh
+                        - -i
+                        - tcp://nprobe:3234
