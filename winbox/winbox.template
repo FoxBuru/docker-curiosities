@@ -1,0 +1,28 @@
+#!/bin/bash
+
+############################################################
+# Copyright (c) 2017 Ivan de Gyves
+# Based on the work of Jonathan Yantis (c) 2015
+# Released under the MIT license
+############################################################
+
+# Set our wineprefix to point to one just for skype.
+export WINEPREFIX=/home/docker/wine/winbox
+export WINEARCH='win32'
+
+# Check if the user has skype installed and if they do not then set it up
+if [ ! -f ${WINEPREFIX}/winbox.exe ]
+then
+    ls -la /home/docker
+    # Basic fonts for MktWinbox
+    winetricks liberation corefonts
+
+    mkdir -p ${WINEPREFIX}
+    cd ${WINEPREFIX}
+    wget -nc "https://download2.mikrotik.com/routeros/winbox/3.11/winbox.exe"
+fi
+
+# Run Skype with legacy login so it works under wine.
+wine ${WINEPREFIX}/winbox.exe
+
+exit
